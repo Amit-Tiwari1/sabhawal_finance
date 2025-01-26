@@ -14,15 +14,15 @@ const Sidebar: React.FC = () => {
 
   useEffect(() => {
     const fetchMenus = async () => {
-      console.log("Fetching menus based on role_id...");
+      // console.log("Fetching menus based on role_id...");
       try {
         const response =
           role_id === 0 ? await getAllMenus() : await getAllMenusPermissionsByUser();
 
-        console.log(
-          role_id === 0 ? "Fetched all menus:" : "Fetched menus for user:",
-          response
-        );
+        // console.log(
+        //   role_id === 0 ? "Fetched all menus:" : "Fetched menus for user:",
+        //   response
+        // );
 
         if (response.success) {
           const menuData = role_id === 0 ? response.result : response.userMenus;
