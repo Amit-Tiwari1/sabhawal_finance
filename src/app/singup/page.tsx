@@ -6,7 +6,7 @@ import useNotifications from "@/components/useNotification";
 import { signupUser, SignupData } from "@/services/userService";
 import Image from "next/image";
 
-const SignupPage = () => {
+const UserPage = () => {
   const { notifySuccess, notifyError } = useNotifications();
 
   const [previewImage, setPreviewImage] = useState<string>("");
@@ -99,130 +99,8 @@ const SignupPage = () => {
   
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-600 mt-14 p-4 sm:p-10">
-      <div className="w-full sm:w-4/5 lg:w-3/5 bg-white shadow-md rounded-md p-6">
-        <h1 className="text-2xl font-bold mb-6 text-center">Signup</h1>
-        <form onSubmit={handleSubmit}>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <Input
-              label="Username"
-              name="username"
-              value={formData.username}
-              onChange={handleChange}
-              required
-              fullWidth
-            />
-                 <Input
-              label="Full Name"
-              name="fullName"
-              value={formData.fullName}
-              onChange={handleChange}
-              placeholder="Enter Full Name"
-              required
-              fullWidth
-            />
-            <Input
-              label="Email"
-              name="email"
-              type="email"
-              value={formData.email}
-              onChange={handleChange}
-              required
-              fullWidth
-            />
-            <Input
-              label="Mobile Number"
-              name="mobilenumber"
-              value={formData.mobilenumber}
-              onChange={handleChange}
-              required
-              fullWidth
-            />
-            <Input
-              label="Role"
-              name="role"
-              value={formData.role}
-              onChange={handleChange}
-              required
-              fullWidth
-            />
-            <Input
-              label="Address 1"
-              name="address1"
-              value={formData.address1}
-              onChange={handleChange}
-              required
-              fullWidth
-            />
-            <Input
-              label="Landmark"
-              name="landmark"
-              value={formData.landmark}
-              onChange={handleChange}
-              fullWidth
-            />
-            <Input
-              label="City"
-              name="city"
-              value={formData.city}
-              onChange={handleChange}
-              required
-              fullWidth
-            />
-            <Input
-              label="State"
-              name="state"
-              value={formData.state}
-              onChange={handleChange}
-              required
-              fullWidth
-            />
-            <Input
-              label="Pin Code"
-              name="pin"
-              value={formData.pin}
-              onChange={handleChange}
-              required
-              fullWidth
-            />
-            <Input
-              label="Password"
-              name="password"
-              type="password"
-              value={formData.password}
-              onChange={handleChange}
-              required
-              fullWidth
-            />
-            <div className="flex items-center gap-3 mt-4">
-              <div className="w-28 h-20 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden border border-gray-300">
-                {previewImage ? (
-                  <Image
-                    src={previewImage}
-                    alt="Preview"
-                    className="object-cover w-full h-full"
-                    width={40}
-                    height={40}
-                  />
-                ) : (
-                  <IoMdPhotos size={40} className="text-gray-400" />
-                )}
-              </div>
-              <Input
-                type="file"
-                accept="image/jpeg,image/jpg"
-                onChange={handleImageUpload}
-                className="w-full"
-              />
-            </div>
-          </div>
-          <Button type="submit" color="primary" fullWidth className="mt-4">
-            Signup
-          </Button>
-        </form>
-      </div>
-    </div>
+   <h1>test</h1>
   );
 };
 
-export default SignupPage;
+export default UserPage;

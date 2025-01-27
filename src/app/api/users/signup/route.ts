@@ -92,8 +92,9 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
     return NextResponse.json({
       message:
-        "User registered successfully. Please wait for admin verification.",
+        "User added succefully",
       status: "200",
+      success:true,
       data: newUser,
     });
   } catch (error: unknown) {
