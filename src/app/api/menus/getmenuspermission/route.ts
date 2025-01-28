@@ -9,10 +9,11 @@ dbConnect();
 export async function GET(request: NextRequest): Promise<NextResponse> {
   try {
     const decodedToken = getUserInfoData(request);
-    console.log("decodedToken",decodedToken);
+    // console.log("decodedToken",decodedToken);
     
 
     const checkUser = await User.findOne({ where: { id: decodedToken.id } }) as User | null;
+// console.log("checkUser", checkUser);
 
     if (!checkUser) {
       return NextResponse.json({ message: "User not found." }, { status: 404 });
@@ -22,6 +23,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       where: { roleId: checkUser.role },
       attributes: ["menuId", "canCreate", "canRead", "canUpdate", "canDelete"],
     });
+    // console.log("rolePermissions ", rolePermissions);
 
     const permissionsMap = rolePermissions.reduce((acc, perm) => {
       acc[perm.menuId] = {
@@ -33,12 +35,17 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       return acc;
     }, {} as Record<number, any>);
 
+    // console.log("permissionsMap *** ", permissionsMap);
+    
+
     const menuIds = rolePermissions.map((perm) => perm.menuId);
+    // console.log("menuIds *** ", menuIds);
 
     const allMenus = await Menu.findAll({
       where: { MenuId: menuIds },
       attributes: ["MenuId", "MenuName", "MenuUrl", "icon", "MenuParentId"],
     });
+    // console.log("allMenus *** ", allMenus);
 
     const menuMap = new Map<number, any>();
     const rootMenus: any[] = [];
@@ -58,11 +65,20 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         },
         Submenus: [],
       };
+     
+      
 
-      menuMap.set(menu.MenuId, menuData);
+     menuMap.set(menu.MenuId, menuData);
+    
+    
+     console.log("menu*** ",menu);
 
       if (menu.MenuParentId) {
+        
         const parentMenu = menuMap.get(menu.MenuParentId);
+        console.log("parentMenu",parentMenu);
+
+
         if (parentMenu) {
           parentMenu.Submenus.push(menuData);
         }
@@ -70,6 +86,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         rootMenus.push(menuData);
       }
     });
+// console.log("root menus ", rootMenus);
 
     return NextResponse.json({
       message: "User menus fetched successfully",

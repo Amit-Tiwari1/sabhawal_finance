@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import React, { useState, useEffect } from "react";
 import {
   Table,
@@ -7,7 +7,6 @@ import {
   TableBody,
   TableRow,
   TableCell,
- 
   Tooltip,
   Button,
   ModalContent,
@@ -19,15 +18,18 @@ import {
   Spinner,
   Checkbox,
 } from "@nextui-org/react";
-import { createNewRole, getAllMenus, getAllRoles } from "@/services/menuService";
+import {
+  createNewRole,
+  getAllMenus,
+  getAllRoles,
+} from "@/services/menuService";
 import useNotifications from "@/components/useNotification";
 import { EditIcon } from "../../../../../public/icons/EditIcon";
 import { DeleteIcon } from "../../../../../public/icons/DeleteIcon";
-import {roleColumns} from "@/data/helperData"
+import { roleColumns } from "@/data/helperData";
 import moment from "moment";
 export default function CreateRolePage() {
   const { notifySuccess, notifyError } = useNotifications();
-
 
   const [openAddNewUser, setAddNewUser] = useState(false);
   const [allMenus, setAllMenus] = useState([]);
@@ -50,8 +52,7 @@ export default function CreateRolePage() {
   const handleMainSubmenu = (menuId, status) => {
     setPermissions((prevPermissions) => {
       const newPermissions = { ...prevPermissions };
-  
-      // Update the permissions for the main menu based on the 'status' (checked or unchecked)
+
       if (status) {
         newPermissions[menuId] = {
           canCreate: true,
@@ -67,21 +68,18 @@ export default function CreateRolePage() {
           canDelete: false,
         };
       }
-  
-      // Calculate if all checkboxes are selected for the menu (canCreate, canRead, canUpdate, canDelete)
+
       const allChecked =
         newPermissions[menuId].canCreate &&
         newPermissions[menuId].canRead &&
         newPermissions[menuId].canUpdate &&
         newPermissions[menuId].canDelete;
-  
-      // Set the 'isMainChecked' to reflect whether all checkboxes are checked
+
       newPermissions[menuId].isMainChecked = allChecked;
-  
+
       return newPermissions;
     });
   };
-  
 
   const handleMainSubmenuOperations = (menuId, checkboxType, value) => {
     setPermissions((prevPermissions) => {
@@ -98,7 +96,7 @@ export default function CreateRolePage() {
         newPermissions[menuId].canDelete;
 
       newPermissions[menuId].isMainChecked = allChecked;
-      
+
       return newPermissions;
     });
   };
@@ -123,8 +121,7 @@ export default function CreateRolePage() {
       setLoading(true);
       try {
         const response = await getAllRoles();
-       
-        
+
         setAllRoles(response.result || []);
       } catch (err) {
         setError(err.message);
@@ -139,32 +136,60 @@ export default function CreateRolePage() {
     const rolePayload = {
       roleName,
       roleDescription: positionName,
-      permissions: Object.keys(permissions).map((submenuId) => {
-        return {
-          menuId: submenuId,
-          canCreate: permissions[submenuId]?.canCreate || false,
-          canRead: permissions[submenuId]?.canRead || false,
-          canUpdate: permissions[submenuId]?.canUpdate || false,
-          canDelete: permissions[submenuId]?.canDelete || false,
+      permissions: allMenus.flatMap((menu) => {
+        const parentPermission = {
+          menuId: menu.MenuId,
+          canCreate: false,
+          canRead: false,
+          canUpdate: false,
+          canDelete: false,
         };
+
+        const submenuPermissions = (menu.Submenus || [])
+          .map((submenu) => {
+            const submenuPermission = {
+              menuId: submenu.MenuId,
+              canCreate: permissions[submenu.MenuId]?.canCreate || false,
+              canRead: permissions[submenu.MenuId]?.canRead || false,
+              canUpdate: permissions[submenu.MenuId]?.canUpdate || false,
+              canDelete: permissions[submenu.MenuId]?.canDelete || false,
+            };
+
+            if (
+              submenuPermission.canCreate ||
+              submenuPermission.canRead ||
+              submenuPermission.canUpdate ||
+              submenuPermission.canDelete
+            ) {
+              return submenuPermission;
+            }
+
+            return null;
+          })
+          .filter((submenu) => submenu !== null);
+
+        const hasSubmenuPermissions = submenuPermissions.length > 0;
+
+        return hasSubmenuPermissions
+          ? [parentPermission, ...submenuPermissions]
+          : [];
       }),
     };
-  
+
+    console.log("rolePayload *** ", rolePayload);
+
     try {
-      const response = await createNewRole(rolePayload); 
-      if(response.status==200){
+      const response = await createNewRole(rolePayload);
+      if (response.status === 200) {
         notifySuccess(`${response.message}`);
       }
-      
-  
-      setRoleName("");  
-      setPositionName(""); 
-      setPermissions({}); 
+
+      setRoleName("");
+      setPositionName("");
+      setPermissions({});
       setActiveMenu(null);
       setMenuCounts({});
-  
-      setAddNewUser(false); 
-  
+      setAddNewUser(false);
     } catch (error) {
       notifyError(error.message);
     }
@@ -172,28 +197,19 @@ export default function CreateRolePage() {
 
   const renderCell = React.useCallback((role, columnKey) => {
     console.log("role and columnkey is getting ", role, columnKey);
-    
+
     const cellValue = role[columnKey];
 
     switch (columnKey) {
       case "roleName":
-        return (
-          <span>{cellValue}</span>
-        );
+        return <span>{cellValue}</span>;
       case "roleDescription":
-        return (
-                <span>{cellValue}</span>
-
-        );
+        return <span>{cellValue}</span>;
       case "createdAt":
-        return (
-          <span>{moment(cellValue).format('ll')}</span>
-
-        );
+        return <span>{moment(cellValue).format("ll")}</span>;
       case "actions":
         return (
           <div className="relative flex items-center gap-2">
-        
             <Tooltip content="Edit user">
               <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
                 <EditIcon />
@@ -211,9 +227,6 @@ export default function CreateRolePage() {
     }
   }, []);
 
-  
-  
-
   return (
     <>
       <div className="mb-5">
@@ -230,21 +243,26 @@ export default function CreateRolePage() {
         <div className="text-red-500 text-center">Error: {error}</div>
       ) : (
         <Table aria-label="Role Table" isStriped>
-      <TableHeader columns={roleColumns}>
-        {(column) => (
-          <TableColumn key={column.uid} align={column.uid === "actions" ? "center" : "start"}>
-            {column.name}
-          </TableColumn>
-        )}
-      </TableHeader>
-      <TableBody items={allRoles}>
-        {(item) => (
-          <TableRow key={item.roleId}>
-            {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
-          </TableRow>
-        )}
-      </TableBody>
-    </Table>
+          <TableHeader columns={roleColumns}>
+            {(column) => (
+              <TableColumn
+                key={column.uid}
+                align={column.uid === "actions" ? "center" : "start"}
+              >
+                {column.name}
+              </TableColumn>
+            )}
+          </TableHeader>
+          <TableBody items={allRoles}>
+            {(item) => (
+              <TableRow key={item.roleId}>
+                {(columnKey) => (
+                  <TableCell>{renderCell(item, columnKey)}</TableCell>
+                )}
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
       )}
 
       <Modal
@@ -266,7 +284,7 @@ export default function CreateRolePage() {
                     placeholder="Enter Role Name"
                     value={roleName}
                     onChange={(e) => {
-                      console.log('Role Name changed:', e.target.value);
+                      console.log("Role Name changed:", e.target.value);
                       setRoleName(e.target.value);
                     }}
                     required
@@ -277,7 +295,7 @@ export default function CreateRolePage() {
                     placeholder="Position name (e.g., Section Officer)"
                     value={positionName}
                     onChange={(e) => {
-                      console.log('Position Name changed:', e.target.value);
+                      console.log("Position Name changed:", e.target.value);
                       setPositionName(e.target.value);
                     }}
                     size="sm"
@@ -286,7 +304,10 @@ export default function CreateRolePage() {
 
                 <div className="menu-container flex flex-wrap gap-4 p-4 bg-gray-800 rounded-sm">
                   {allMenus.map((menu) => (
-                    <div key={menu.MenuId} className="menu-item mb-4 w-auto bg-red-300">
+                    <div
+                      key={menu.MenuId}
+                      className="menu-item mb-4 w-auto bg-red-300"
+                    >
                       <div
                         className="flex items-center p-2 cursor-pointer bg-gray-200 rounded-md hover:bg-gray-300"
                         onClick={() => handleParentClick(menu.MenuId)}
@@ -314,9 +335,15 @@ export default function CreateRolePage() {
                           <div className="relative px-2 py-1 bg-white ring-1 ring-gray-900/5 rounded-lg shadow-md leading-none space-y-4">
                             <h2 className="text-lg font-semibold text-white bg-[#192538] p-1 rounded">
                               <Checkbox
-                                isSelected={permissions[submenu.MenuId]?.isMainChecked || false}
+                                isSelected={
+                                  permissions[submenu.MenuId]?.isMainChecked ||
+                                  false
+                                }
                                 onChange={(e) => {
-                                  handleMainSubmenu(submenu.MenuId, e.target.checked);
+                                  handleMainSubmenu(
+                                    submenu.MenuId,
+                                    e.target.checked
+                                  );
                                 }}
                               />
                               {submenu.MenuName}
@@ -324,38 +351,70 @@ export default function CreateRolePage() {
                             <div className="flex flex-col gap-2">
                               <label className="flex items-center gap-2">
                                 <Checkbox
-                                  isSelected={permissions[submenu.MenuId]?.canRead || false}
+                                  isSelected={
+                                    permissions[submenu.MenuId]?.canRead ||
+                                    false
+                                  }
                                   onChange={(e) => {
-                                    handleMainSubmenuOperations(submenu.MenuId, "canRead", e.target.checked);
+                                    handleMainSubmenuOperations(
+                                      submenu.MenuId,
+                                      "canRead",
+                                      e.target.checked
+                                    );
                                   }}
                                 />
                                 <span> canRead</span>
                               </label>
                               <label className="flex items-center gap-2">
                                 <Checkbox
-                                  isSelected={permissions[submenu.MenuId]?.canCreate || false}
+                                  isSelected={
+                                    permissions[submenu.MenuId]?.canCreate ||
+                                    false
+                                  }
                                   onChange={(e) => {
-                                    handleMainSubmenuOperations(submenu.MenuId, "canCreate", e.target.checked);
+                                    handleMainSubmenuOperations(
+                                      submenu.MenuId,
+                                      "canCreate",
+                                      e.target.checked
+                                    );
                                   }}
                                 />
                                 <span>canCreate</span>
                               </label>
                               <label className="flex items-center gap-2">
                                 <Checkbox
-                                  isSelected={permissions[submenu.MenuId]?.canUpdate || false}
+                                  isSelected={
+                                    permissions[submenu.MenuId]?.canUpdate ||
+                                    false
+                                  }
                                   onChange={(e) => {
-                                    console.log(`canUpdate checkbox for submenu: ${submenu.MenuName}, checked: ${e.target.checked}`);
-                                    handleMainSubmenuOperations(submenu.MenuId, "canUpdate", e.target.checked);
+                                    console.log(
+                                      `canUpdate checkbox for submenu: ${submenu.MenuName}, checked: ${e.target.checked}`
+                                    );
+                                    handleMainSubmenuOperations(
+                                      submenu.MenuId,
+                                      "canUpdate",
+                                      e.target.checked
+                                    );
                                   }}
                                 />
                                 <span>canUpdate</span>
                               </label>
                               <label className="flex items-center gap-2">
                                 <Checkbox
-                                  isSelected={permissions[submenu.MenuId]?.canDelete || false}
+                                  isSelected={
+                                    permissions[submenu.MenuId]?.canDelete ||
+                                    false
+                                  }
                                   onChange={(e) => {
-                                    console.log(`canDelete checkbox for submenu: ${submenu.MenuName}, checked: ${e.target.checked}`);
-                                    handleMainSubmenuOperations(submenu.MenuId, "canDelete", e.target.checked);
+                                    console.log(
+                                      `canDelete checkbox for submenu: ${submenu.MenuName}, checked: ${e.target.checked}`
+                                    );
+                                    handleMainSubmenuOperations(
+                                      submenu.MenuId,
+                                      "canDelete",
+                                      e.target.checked
+                                    );
                                   }}
                                 />
                                 <span>canDelete</span>

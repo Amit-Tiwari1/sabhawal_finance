@@ -9,38 +9,39 @@ const Sidebar: React.FC = () => {
   const router = useRouter();
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
   const [menus, setMenus] = useState<any[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
   const role_id = 0;
 
+
   useEffect(() => {
     const fetchMenus = async () => {
-      // console.log("Fetching menus based on role_id...");
       try {
         const response =
           role_id === 0 ? await getAllMenus() : await getAllMenusPermissionsByUser();
-
-        // console.log(
-        //   role_id === 0 ? "Fetched all menus:" : "Fetched menus for user:",
-        //   response
-        // );
-
+        
+          console.log("response", response);
+          
         if (response.success) {
           const menuData = role_id === 0 ? response.result : response.userMenus;
           const formattedMenus = menuData.map((menu: any) => ({
             name: menu.MenuName,
             path: menu.MenuUrl || null,
             submenus:
-              menu.Submenus?.map((submenu: any) => ({
-                name: submenu.MenuName,
-                path: submenu.MenuUrl || null,
+              menu?.Submenus?.map((submenu: any) => ({
+                name: submenu?.MenuName,
+                path: submenu?.MenuUrl || null,
               })) || [],
           }));
           setMenus(formattedMenus);
         } else {
-          console.error(response.message);
+          setError("Failed to fetch menus.");
         }
       } catch (error) {
-        console.error(error.message || "Failed to fetch menus.");
+        setError(error.message || "An error occurred.");
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -95,11 +96,31 @@ const Sidebar: React.FC = () => {
     </div>
   );
 
+  if (loading) {
+    return (
+      <div className="bg-gray-800 text-white w-64 h-full flex flex-col">
+        <h2 className="text-2xl font-bold p-4 border-b border-gray-700">Dashboard</h2>
+        <div className="flex-1 flex justify-center items-center">
+          <p>Loading menus...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="bg-gray-800 text-white w-64 h-full flex flex-col">
+        <h2 className="text-2xl font-bold p-4 border-b border-gray-700">Dashboard</h2>
+        <div className="flex-1 flex justify-center items-center">
+          <p>{error}</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="bg-gray-800 text-white w-64 h-full flex flex-col">
-      <h2 className="text-2xl font-bold p-4 border-b border-gray-700">
-        Dashboard
-      </h2>
+      <h2 className="text-2xl font-bold p-4 border-b border-gray-700">Dashboard</h2>
       <nav className="flex-1 overflow-y-auto">
         {menus.map((menu) => renderMenu(menu))}
       </nav>

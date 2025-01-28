@@ -24,7 +24,6 @@ export interface LoginData {
 export async function signupUser(data: SignupData) {
   try {
     const formData = new FormData();
-    console.log("data", data);
     
     
     Object.entries(data).forEach(([key, value]) => {

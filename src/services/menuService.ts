@@ -16,6 +16,8 @@ export async function getAllMenus() {
   }
 
   export async function getAllMenusPermissionsByUser() {
+    
+
     try {
       const response = await axiosInstance.get("/menus/getmenuspermission", {
         headers: {

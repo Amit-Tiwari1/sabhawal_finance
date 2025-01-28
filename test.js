@@ -498,3 +498,147 @@ export const config = {
     ],
 };
 
+
+
+
+
+    result =[
+        {
+            "MenuId": 1,
+            "MenuName": "Dashboard",
+            "MenuParentId": null,
+            "MenuUrl": "/dashboard",
+            "icon": "AiFillDashboard",
+            "createdAt": "2025-01-12T11:32:41.000Z",
+            "updatedAt": "2025-01-13T15:19:11.000Z",
+            "Submenus": []
+        },
+        {
+            "MenuId": 2,
+            "MenuName": "Company",
+            "MenuParentId": null,
+            "MenuUrl": "/company/profile",
+            "icon": "BiSolidInstitution",
+            "createdAt": "2025-01-12T11:32:41.000Z",
+            "updatedAt": "2025-01-13T15:19:11.000Z",
+            "Submenus": [
+                {
+                    "MenuId": 3,
+                    "MenuName": "Profile",
+                    "MenuParentId": 2,
+                    "MenuUrl": "/company/profile",
+                    "icon": null,
+                    "createdAt": "2025-01-12T11:32:41.000Z",
+                    "updatedAt": "2025-01-12T11:32:41.000Z",
+                    "permissions": {
+                      "canCreate": true,
+                      "canRead": true,
+                      "canUpdate": false,
+                      "canDelete": false
+                    }
+
+       },
+                {
+                    "MenuId": 4,
+                    "MenuName": "Branches",
+                    "MenuParentId": 2,
+                    "MenuUrl": "/company/branches",
+                    "icon": null,
+                    "createdAt": "2025-01-12T11:32:41.000Z",
+                    "updatedAt": "2025-01-12T11:32:41.000Z",
+                    "permissions": {
+                      "canCreate": true,
+                      "canRead": true,
+                      "canUpdate": false,
+                      "canDelete": false
+                    }
+                
+                },
+                {
+                  "MenuId": 5,
+                  "MenuName": "Promoters",
+                  "MenuParentId": 2,
+                  "MenuUrl": "/company/promoters",
+                  "icon": null,
+                  "createdAt": "2025-01-12T11:32:41.000Z",
+                  "updatedAt": "2025-01-12T11:32:41.000Z",
+                  "permissions": {
+                    "canCreate": true,
+                    "canRead": true,
+                    "canUpdate": false,
+                    "canDelete": false
+                  }
+              }
+            ]
+          },
+          {
+            "MenuId": 12,
+            "MenuName": "User Management",
+            "MenuParentId": null,
+            "MenuUrl": "/user",
+            "icon": "FaUsers",
+            "createdAt": "2025-01-12T11:32:41.000Z",
+            "updatedAt": "2025-01-13T15:19:11.000Z",
+            "Submenus": [
+                {
+                    "MenuId": 13,
+                    "MenuName": "Role & Permissions",
+                    "MenuParentId": 12,
+                    "MenuUrl": "/dashboard/users/role",
+                    "icon": null,
+                    "createdAt": "2025-01-12T11:32:41.000Z",
+                    "updatedAt": "2025-01-12T11:32:41.000Z",
+                    "permissions": {
+                    "canCreate": false,
+                    "canRead": true,
+                    "canUpdate": false,
+                    "canDelete": false
+                  }
+                },
+                {
+                    "MenuId": 14,
+                    "MenuName": "Users",
+                    "MenuParentId": 12,
+                    "MenuUrl": "/dashboard/users/all",
+                    "icon": null,
+                    "createdAt": "2025-01-12T11:32:41.000Z",
+                    "updatedAt": "2025-01-12T11:32:41.000Z",
+                    "permissions": {
+                    "canCreate": true,
+                    "canRead": true,
+                    "canUpdate": false,
+                    "canDelete": false
+                  }
+                },
+                {
+                    "MenuId": 15,
+                    "MenuName": "Active Users",
+                    "MenuParentId": 12,
+                    "MenuUrl": "/user/active",
+                    "icon": null,
+                    "createdAt": "2025-01-12T11:32:41.000Z",
+                    "updatedAt": "2025-01-12T11:32:41.000Z",
+                    "permissions": {
+                    "canCreate": true,
+                    "canRead": true,
+                    "canUpdate": false,
+                    "canDelete": false
+                  }
+                },
+                {
+                    "MenuId": 16,
+                    "MenuName": "Deactive Users",
+                    "MenuParentId": 12,
+                    "MenuUrl": "/user/deactive",
+                    "icon": null,
+                    "createdAt": "2025-01-12T11:32:41.000Z",
+                    "updatedAt": "2025-01-12T11:32:41.000Z",
+                    "permissions": {
+                    "canCreate": true,
+                    "canRead": true,
+                    "canUpdate": false,
+                    "canDelete": false
+                  }
+                }
+            ]
+        },

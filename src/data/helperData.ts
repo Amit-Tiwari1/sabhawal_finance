@@ -6,16 +6,13 @@ const roleColumns = [
   ];
 
   const usersColumns = [
-    {name: "Role Name", uid: "username"},
-    {name: "Role Descriptation", uid: "fullName"},
-    {name: "Created Date ", uid: "email"},
-    {name: "Role Name", uid: "mobilenumber"},
-    {name: "Role Descriptation", uid: "role"},
-    {name: "Created Date ", uid: "city"},
-    {name: "Role Name", uid: "state"},
-    {name: "Role Descriptation", uid: "role"},
-    {name: "Created Date ", uid: "city"},
-    {name: "ACTIONS", uid: "actions"},
+    { name: "PROFILE", uid: "profile" },
+    { name: "NAME & EMAIL", uid: "nameEmail" },
+    { name: "ROLE", uid: "role" },
+    { name: "MOBILE", uid: "mobilenumber" },
+    { name: "CITY & ADDRESS", uid: "cityAddress" },
+    { name: "STATUS", uid: "status" },
+    { name: "ACTIONS", uid: "actions" },
   ];
 
-export {roleColumns}
+export {roleColumns,usersColumns}

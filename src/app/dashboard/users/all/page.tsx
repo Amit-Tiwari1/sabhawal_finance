@@ -18,6 +18,8 @@ import {
   Spinner,
   User,
   Chip,
+  Select,
+  SelectItem,
 } from "@nextui-org/react";
 import { IoMdPhotos } from "react-icons/io";
 import useNotifications from "@/components/useNotification";
@@ -26,23 +28,17 @@ import Image from "next/image";
 import { EyeIcon } from "../../../../../public/icons/EyeIcon";
 import { EditIcon } from "../../../../../public/icons/EditIcon";
 import { DeleteIcon } from "../../../../../public/icons/DeleteIcon";
+import { usersColumns } from "@/data/helperData";
+import { getAllRoles } from "@/services/menuService";
 
 const SignupPage = () => {
-  const usersColumns = [
-    { name: "PROFILE", uid: "profile" },
-    { name: "NAME & EMAIL", uid: "nameEmail" },
-    { name: "ROLE", uid: "role" },
-    { name: "MOBILE", uid: "mobilenumber" },
-    { name: "CITY & ADDRESS", uid: "cityAddress" },
-    { name: "STATUS", uid: "status" },
-    { name: "ACTIONS", uid: "actions" },
-  ];
   const { notifySuccess, notifyError } = useNotifications();
 
   const [openAddNewUser, setAddNewUser] = useState(false);
   const [allUsers, setAllUsers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [allRoles, setAllRoles] = useState([]);
 
   const [previewImage, setPreviewImage] = useState<string>("");
   const [formData, setFormData] = useState({
@@ -83,7 +79,25 @@ const SignupPage = () => {
     fetchAllUsers();
   }, []);
 
+  useEffect(() => {
+    const fetchAllRoles = async () => {
+      setLoading(true);
+      try {
+        const response = await getAllRoles();
+
+        setAllRoles(response.result || []);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchAllRoles();
+  }, []);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log("e is getting ", e.target.value);
+    
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
@@ -114,6 +128,7 @@ const SignupPage = () => {
     e.preventDefault();
 
     try {
+
       const formPayload: SignupData = {
         username: formData.username,
         fullName: formData.fullName,
@@ -128,6 +143,7 @@ const SignupPage = () => {
         userpic: formData.userpic,
         password: formData.password,
       };
+console.log("final form data ", formPayload);
 
       const response = await signupUser(formPayload);
 
@@ -180,7 +196,7 @@ const SignupPage = () => {
       case "nameEmail":
         return (
           <div>
-            <p className="font-semibold">{user.fullName}</p>
+            <p className="font-semibold capitalize">{user.fullName}</p>
             <p className="text-sm text-gray-500">{user.email}</p>
           </div>
         );
@@ -193,7 +209,7 @@ const SignupPage = () => {
       case "cityAddress":
         return (
           <div>
-            <p>{user.city}</p>
+            <p className="capitalize">{user.city}</p>
             <p className="text-sm text-gray-500">
               {user.address1}, {user.state}
             </p>
@@ -317,14 +333,32 @@ const SignupPage = () => {
                         required
                         fullWidth
                       />
-                      <Input
+                      {/* <Input
                         label="Role"
                         name="role"
                         value={formData.role}
                         onChange={handleChange}
                         required
                         fullWidth
-                      />
+                      /> */}
+                      <Select
+                        name="role"
+                        required
+                        value={formData.role}
+                        className="max-w-xs"
+                        items={allRoles}
+                        label="Role"
+                        placeholder="Select Role"
+                        onChange={handleChange}
+                        
+                      >
+                        {(role) => (
+                          <SelectItem key={role.roleId} value={role.roleId}>
+                            {role.roleName}
+                          </SelectItem>
+                        )}
+                      </Select>
+
                       <Input
                         label="Address 1"
                         name="address1"
