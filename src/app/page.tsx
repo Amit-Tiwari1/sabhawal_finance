@@ -1,9 +1,13 @@
 "use client";
 
 import AnimatedButton from "@/components/AnimatedButton";
+import { getAllMenusPermissionsByUser } from "@/services/menuService";
 import Link from "next/link";
 
 export default function LandingPage() {
+
+  
+  
   return (
     <div className="min-h-screen bg-black text-white">
       <section className="flex flex-col items-center justify-center text-center px-6 py-20 sm:py-32 lg:py-48">

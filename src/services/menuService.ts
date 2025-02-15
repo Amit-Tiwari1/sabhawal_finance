@@ -1,5 +1,4 @@
 import { axiosInstance } from "@/utils/axiosInstance";
-
 export async function getAllMenus() {
     try {
       const response = await axiosInstance.get("/menus/getallmenus", {
@@ -16,14 +15,14 @@ export async function getAllMenus() {
   }
 
   export async function getAllMenusPermissionsByUser() {
-    
-
     try {
       const response = await axiosInstance.get("/menus/getmenuspermission", {
         headers: {
           "Content-Type": "application/json",
         },
       });
+      console.log("response ", response);
+      
       return response.data;
     } catch (error: any) {
       const errorMessage = 
@@ -53,6 +52,7 @@ export async function getAllMenus() {
       const response = await axiosInstance.get("/menus/getallroles", {
         headers: {
           "Content-Type": "application/json",
+
         },
       });
       return response.data;

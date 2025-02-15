@@ -8,8 +8,11 @@ dbConnect();
 
 export async function GET(request: NextRequest): Promise<NextResponse> {
   try {
+
+    console.log("request***** ", request);
+    
     const decodedToken = getUserInfoData(request);
-    // console.log("decodedToken",decodedToken);
+    console.log("decodedToken",decodedToken);
     
 
     const checkUser = await User.findOne({ where: { id: decodedToken.id } }) as User | null;
@@ -71,12 +74,12 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
      menuMap.set(menu.MenuId, menuData);
     
     
-     console.log("menu*** ",menu);
+    //  console.log("menu*** ",menu);
 
       if (menu.MenuParentId) {
         
         const parentMenu = menuMap.get(menu.MenuParentId);
-        console.log("parentMenu",parentMenu);
+        // console.log("parentMenu",parentMenu);
 
 
         if (parentMenu) {

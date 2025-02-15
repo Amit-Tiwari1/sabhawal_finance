@@ -1,9 +1,12 @@
-"use client";
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { IoMdArrowDropdown, IoMdArrowDropright } from "react-icons/io";
 import { useRouter } from "next/navigation";
 import { getAllMenusPermissionsByUser, getAllMenus } from "@/services/menuService";
+
+
+  
+
 
 const Sidebar: React.FC = () => {
   const router = useRouter();
@@ -12,8 +15,9 @@ const Sidebar: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  const role_id = 0;
+  
 
+  const role_id = 0;
 
   useEffect(() => {
     const fetchMenus = async () => {
@@ -21,7 +25,7 @@ const Sidebar: React.FC = () => {
         const response =
           role_id === 0 ? await getAllMenus() : await getAllMenusPermissionsByUser();
         
-          console.log("response", response);
+          // console.log("response", response);
           
         if (response.success) {
           const menuData = role_id === 0 ? response.result : response.userMenus;
